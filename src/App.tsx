@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ShoppingBag, CheckCircle, ArrowRight, Star, ChevronDown, Watch, Activity, Brain, Mail } from 'lucide-react';
 import { supabase } from './lib/supabase';
-import shortImage from './short.png';
+import { ShortsModel } from './components/ShortsModel';
+import { ErrorBoundary } from 'react-error-boundary'
 
 function App() {
   const [email, setEmail] = useState('');
@@ -97,13 +98,19 @@ function App() {
       <section id="features" className="py-24 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="relative">
-              <img
-                src={shortImage}
-                alt="Smart Sports Shorts"
-                className="rounded-2xl shadow-2xl animate-float"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-2xl" />
+            <div className="relative h-[600px] bg-gradient-to-b from-gray-900 to-black rounded-2xl overflow-hidden">
+              <ErrorBoundary
+                FallbackComponent={ErrorFallback}
+                onError={(error) => {
+                  console.error('Error in 3D render:', error);
+                  // Force remount on error
+                  window.location.reload();
+                }}
+              >
+                <div className="w-full h-full">
+                  <ShortsModel />
+                </div>
+              </ErrorBoundary>
             </div>
             
             <div className="space-y-8 scroll-reveal">
@@ -301,6 +308,14 @@ function Feature({ icon, title, description }: { icon: React.ReactNode; title: s
       </div>
     </div>
   );
+}
+
+function ErrorFallback() {
+  return (
+    <div className="w-full h-full flex items-center justify-center text-red-400">
+      Error loading 3D model. Please refresh the page.
+    </div>
+  )
 }
 
 export default App;

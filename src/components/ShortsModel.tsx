@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { Group, Mesh, Object3D } from 'three'
+import { Group, Object3D } from 'three'
 
 export function ShortsModel() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -77,8 +77,8 @@ export function ShortsModel() {
       (progress: { loaded: number; total: number }) => {
         console.log('Loading progress:', (progress.loaded / progress.total) * 100, '%')
       },
-      (error: Error) => {
-        console.error('Error loading model:', error)
+      (err: unknown) => {
+        console.error('Error loading model:', err)
       }
     )
 

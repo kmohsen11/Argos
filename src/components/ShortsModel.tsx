@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -6,257 +6,195 @@ import { Group, Object3D } from 'three'
 
 export function ShortsModel() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   
   useEffect(() => {
     if (!containerRef.current) return
+    
+    console.log('Initializing 3D model container')
 
     // Scene setup
     const scene = new THREE.Scene()
-    scene.background = new THREE.Color('#111')
+    scene.background = null // Make background transparent
 
     // Camera setup
-    const camera = new THREE.PerspectiveCamera(45, containerRef.current.clientWidth / containerRef.current.clientHeight, 0.1, 1000)
-    camera.position.z = 5
+    const camera = new THREE.PerspectiveCamera(50, containerRef.current.clientWidth / containerRef.current.clientHeight, 0.1, 1000)
+    camera.position.set(3, 2, 3)
+    camera.lookAt(0, 0, 0)
 
     // Renderer setup
-    const renderer = new THREE.WebGLRenderer({ antialias: true })
+    const renderer = new THREE.WebGLRenderer({ 
+      antialias: true,
+      alpha: true,
+    })
     renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight)
     renderer.shadowMap.enabled = true
     renderer.shadowMap.type = THREE.PCFSoftShadowMap
+    renderer.outputColorSpace = THREE.SRGBColorSpace
+    renderer.toneMapping = THREE.ACESFilmicToneMapping
+    renderer.toneMappingExposure = 1.5
+    renderer.setClearColor(0x000000, 0) // Make background transparent
     containerRef.current.appendChild(renderer.domElement)
+    
+    console.log('Renderer added to container')
 
-    // Try to add environment map for reflections
-    try {
-      const envMapLoader = new THREE.CubeTextureLoader();
-      envMapLoader.setPath('/envmap/');
-      
-      // Try to load the environment map
-      envMapLoader.load(
-        ['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg'],
-        (texture) => {
-          texture.mapping = THREE.CubeReflectionMapping;
-          scene.environment = texture;
-        },
-        undefined,
-        (error) => {
-          console.warn('Failed to load environment map:', error);
-          // Create a simple color environment as fallback
-          scene.background = new THREE.Color(0x111111);
-          scene.fog = new THREE.FogExp2(0x111111, 0.05);
-          
-          // Add more colored lights instead of environment map
-          const backLight = new THREE.DirectionalLight(0x9370db, 0.5);
-          backLight.position.set(-5, 5, -5);
-          scene.add(backLight);
-          
-          const fillLight = new THREE.DirectionalLight(0x4b0082, 0.3);
-          fillLight.position.set(5, -5, -5);
-          scene.add(fillLight);
-        }
-      );
-    } catch (error) {
-      console.warn('Error setting up environment map:', error);
-    }
+    // Add colored lights for better visibility
+    const ambientLight = new THREE.AmbientLight(0xffffff, 2)
+    scene.add(ambientLight)
+
+    // Add key light
+    const keyLight = new THREE.DirectionalLight(0xffffff, 4)
+    keyLight.position.set(5, 5, 5)
+    keyLight.castShadow = true
+    scene.add(keyLight)
+    
+    // Add fill light
+    const fillLight = new THREE.DirectionalLight(0x9370db, 3)
+    fillLight.position.set(-5, 0, 5)
+    scene.add(fillLight)
+    
+    // Add rim light
+    const rimLight = new THREE.DirectionalLight(0x4b0082, 3)
+    rimLight.position.set(0, 5, -5)
+    scene.add(rimLight)
+
+    // Add point lights for extra glow
+    const pointLight1 = new THREE.PointLight(0xff00ff, 1, 10)
+    pointLight1.position.set(2, 2, 2)
+    scene.add(pointLight1)
+
+    const pointLight2 = new THREE.PointLight(0x00ffff, 1, 10)
+    pointLight2.position.set(-2, -2, -2)
+    scene.add(pointLight2)
+    
+    console.log('Lights added to scene')
 
     // Orbit controls
     const controls = new OrbitControls(camera, renderer.domElement)
     controls.enableDamping = true
     controls.dampingFactor = 0.05
-    controls.minDistance = 3
+    controls.minDistance = 2
     controls.maxDistance = 10
-
-    // Add lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
-    scene.add(ambientLight)
-
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1)
-    directionalLight.position.set(5, 5, 5)
-    directionalLight.castShadow = true
-    directionalLight.shadow.mapSize.width = 2048
-    directionalLight.shadow.mapSize.height = 2048
-    scene.add(directionalLight)
+    controls.autoRotate = true
+    controls.autoRotateSpeed = 2.0
+    controls.target.set(0, 0.5, 0) // Look at center of shorts
+    controls.update()
+    
+    console.log('Controls initialized')
 
     // Load FBX model
     const loader = new FBXLoader()
+    console.log('Starting to load model from /shorts.fbx')
+    
     loader.load(
       '/shorts.fbx',
       (fbx: Group) => {
+        console.log('Model loaded successfully', fbx)
+        
         // Center the model
         const box = new THREE.Box3().setFromObject(fbx)
         const center = box.getCenter(new THREE.Vector3())
         fbx.position.sub(center)
+        fbx.position.y += 1 // Raise shorts up a bit
         
         // Scale the model appropriately
         const size = box.getSize(new THREE.Vector3())
         const maxDim = Math.max(size.x, size.y, size.z)
         const scale = 2 / maxDim
         fbx.scale.setScalar(scale)
+        
+        // Rotate to face camera
+        fbx.rotation.y = Math.PI / 4
+        
+        console.log('Model centered and scaled', { center, size, scale })
 
         // Add materials
         fbx.traverse((child: Object3D) => {
           if (child instanceof THREE.Mesh) {
-            // Apply a colorful material even without texture
+            console.log('Applying material to mesh', child)
             const material = new THREE.MeshPhysicalMaterial({
-              color: 0x6a0dad, // Purple base color
-              roughness: 0.3,
-              metalness: 0.5,
-              emissive: 0x2b0080, // Slight emissive glow
-              emissiveIntensity: 0.2,
-              envMapIntensity: 0.8,
-              clearcoat: 0.3,
+              color: 0x9370db,
+              metalness: 0.2,
+              roughness: 0.4,
+              clearcoat: 0.8,
               clearcoatRoughness: 0.2,
-            });
-            
-            // Try to load gradient texture
-            new THREE.TextureLoader().load(
-              '/gradient.png', 
-              (texture) => {
-                texture.wrapS = THREE.RepeatWrapping;
-                texture.wrapT = THREE.RepeatWrapping;
-                material.map = texture;
-                material.needsUpdate = true;
-              },
-              undefined,
-              (error) => {
-                console.warn('Failed to load gradient texture:', error);
-                // Create a procedural gradient texture as fallback
-                const canvas = document.createElement('canvas');
-                canvas.width = 512;
-                canvas.height = 512;
-                const ctx = canvas.getContext('2d');
-                if (ctx) {
-                  const gradient = ctx.createLinearGradient(0, 0, 0, 512);
-                  gradient.addColorStop(0, '#6a0dad');  // Purple at top
-                  gradient.addColorStop(0.5, '#9370db'); // Medium purple in middle
-                  gradient.addColorStop(1, '#4b0082');  // Indigo at bottom
-                  
-                  ctx.fillStyle = gradient;
-                  ctx.fillRect(0, 0, 512, 512);
-                  
-                  const fallbackTexture = new THREE.CanvasTexture(canvas);
-                  material.map = fallbackTexture;
-                  material.needsUpdate = true;
-                }
-              }
-            );
-            
-            // Try to load normal map for added detail
-            new THREE.TextureLoader().load(
-              '/normal.jpg',
-              (texture) => {
-                material.normalMap = texture;
-                material.normalScale.set(0.5, 0.5);
-                material.needsUpdate = true;
-              },
-              undefined,
-              (error) => {
-                console.warn('Failed to load normal map:', error);
-                // Create a simple noise normal map as fallback
-                const canvas = document.createElement('canvas');
-                canvas.width = 512;
-                canvas.height = 512;
-                const ctx = canvas.getContext('2d');
-                if (ctx) {
-                  // Simple noise pattern
-                  for (let y = 0; y < canvas.height; y++) {
-                    for (let x = 0; x < canvas.width; x++) {
-                      const r = Math.floor(Math.random() * 10) + 120;
-                      const g = Math.floor(Math.random() * 10) + 120;
-                      const b = 255;
-                      ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-                      ctx.fillRect(x, y, 1, 1);
-                    }
-                  }
-                  const normalTexture = new THREE.CanvasTexture(canvas);
-                  material.normalMap = normalTexture;
-                  material.normalScale.set(0.1, 0.1);
-                  material.needsUpdate = true;
-                }
-              }
-            );
-            
-            child.material = material;
-            
-            // Add a second directional light with color for highlights
-            const highlightLight = new THREE.DirectionalLight(0x9370db, 0.8);
-            highlightLight.position.set(-5, 3, -5);
-            scene.add(highlightLight);
-            
-            child.castShadow = true;
-            child.receiveShadow = true;
+              emissive: 0x330033,
+              emissiveIntensity: 0.5,
+            })
+            child.material = material
+            child.castShadow = true
+            child.receiveShadow = true
           }
         })
 
         scene.add(fbx)
+        console.log('Model added to scene')
+        setLoading(false)
       },
-      (progress: { loaded: number; total: number }) => {
-        console.log('Loading progress:', (progress.loaded / progress.total) * 100, '%')
+      (xhr) => {
+        const percent = (xhr.loaded / xhr.total) * 100
+        console.log(`Loading model: ${percent.toFixed(2)}% loaded`)
       },
-      (err: unknown) => {
-        console.error('Error loading model:', err)
+      (error) => {
+        console.error('Error loading model:', error)
+        setError('Failed to load 3D model')
+        setLoading(false)
       }
     )
 
-    // Animation
-    let frameId: number
-    let hue = 0;
-    const colorShift = new THREE.Color();
-    const baseColor = new THREE.Color(0x6a0dad);
-    
+    // Animation loop with glowing effect
     const animate = () => {
-      frameId = requestAnimationFrame(animate)
+      requestAnimationFrame(animate)
       
-      // Slowly shift the hue for a subtle color animation
-      hue = (hue + 0.001) % 1;
-      colorShift.setHSL(hue, 0.7, 0.5);
-      
-      // Apply the color shift to all mesh materials
-      scene.traverse((object) => {
-        if (object instanceof THREE.Mesh && 
-            (object.material instanceof THREE.MeshStandardMaterial || 
-             object.material instanceof THREE.MeshPhysicalMaterial)) {
-          // Blend between base color and shifting color
-          object.material.color.copy(baseColor).lerp(colorShift, 0.3);
-          object.material.emissive.copy(colorShift).multiplyScalar(0.2);
-          object.material.needsUpdate = true;
-        }
-      });
+      // Animate point lights
+      const time = Date.now() * 0.001
+      pointLight1.position.x = Math.sin(time) * 3
+      pointLight1.position.z = Math.cos(time) * 3
+      pointLight2.position.x = Math.sin(time + Math.PI) * 3
+      pointLight2.position.z = Math.cos(time + Math.PI) * 3
       
       controls.update()
       renderer.render(scene, camera)
     }
     animate()
+    
+    console.log('Animation loop started')
 
-    // Handle resize
+    // Handle window resize
     const handleResize = () => {
       if (!containerRef.current) return
+      
       const width = containerRef.current.clientWidth
       const height = containerRef.current.clientHeight
-      renderer.setSize(width, height)
+      
       camera.aspect = width / height
       camera.updateProjectionMatrix()
+      renderer.setSize(width, height)
     }
     window.addEventListener('resize', handleResize)
 
     // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize)
-      cancelAnimationFrame(frameId)
-      if (containerRef.current) {
-        containerRef.current.removeChild(renderer.domElement)
-      }
+      containerRef.current?.removeChild(renderer.domElement)
       renderer.dispose()
     }
   }, [])
 
   return (
-    <div 
-      ref={containerRef} 
-      style={{ 
-        width: '100%', 
-        height: '100%',
-        background: '#111'
-      }} 
-    />
+    <div className="w-full h-full relative">
+      <div ref={containerRef} className="w-full h-full" />
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-purple-400 animate-pulse">Loading</div>
+        </div>
+      )}
+      {error && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-red-400">{error}</div>
+        </div>
+      )}
+    </div>
   )
 }

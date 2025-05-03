@@ -1,6 +1,20 @@
+@import './styles/animations.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Fix double scrollbar issue */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  position: relative;
+}
 
 @keyframes float {
   0%, 100% {
@@ -39,4 +53,34 @@
 .scroll-reveal.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Optimized section animations for better performance */
+.section-animation {
+  opacity: 0;
+  transform: translate3d(0, 20px, 0);
+  will-change: opacity, transform;
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Faster transition */
+}
+
+.section-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Simpler animations for staggered elements */
+.section-visible .animate-stagger {
+  opacity: 0;
+}
+
+.section-visible .animate-stagger-1 {
+  animation: fadeIn 0.4s ease-out 0.05s forwards; /* Faster animation */
+}
+
+.section-visible .animate-stagger-2 {
+  animation: fadeIn 0.4s ease-out 0.1s forwards; /* Faster animation */
+}
+
+.section-visible .animate-stagger-3 {
+  animation: fadeIn 0.4s ease-out 0.15s forwards; /* Faster animation */
 }

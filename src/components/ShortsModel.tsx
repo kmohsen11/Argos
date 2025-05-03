@@ -43,28 +43,28 @@ export function ShortsModel() {
     const ambientLight = new THREE.AmbientLight(0xffffff, 2)
     scene.add(ambientLight)
 
-    // Add key light
+    // Add key light (white)
     const keyLight = new THREE.DirectionalLight(0xffffff, 4)
     keyLight.position.set(5, 5, 5)
     keyLight.castShadow = true
     scene.add(keyLight)
     
-    // Add fill light
-    const fillLight = new THREE.DirectionalLight(0x9370db, 3)
+    // Add fill light (primary blue tint)
+    const fillLight = new THREE.DirectionalLight(0x1D4ED8, 3)
     fillLight.position.set(-5, 0, 5)
     scene.add(fillLight)
     
-    // Add rim light
-    const rimLight = new THREE.DirectionalLight(0x4b0082, 3)
+    // Add rim light (accent green tint)
+    const rimLight = new THREE.DirectionalLight(0x10B981, 3)
     rimLight.position.set(0, 5, -5)
     scene.add(rimLight)
 
     // Add point lights for extra glow
-    const pointLight1 = new THREE.PointLight(0xff00ff, 1, 10)
+    const pointLight1 = new THREE.PointLight(0x1D4ED8, 1, 10)
     pointLight1.position.set(2, 2, 2)
     scene.add(pointLight1)
 
-    const pointLight2 = new THREE.PointLight(0x00ffff, 1, 10)
+    const pointLight2 = new THREE.PointLight(0x10B981, 1, 10)
     pointLight2.position.set(-2, -2, -2)
     scene.add(pointLight2)
     
@@ -114,13 +114,13 @@ export function ShortsModel() {
           if (child instanceof THREE.Mesh) {
             console.log('Applying material to mesh', child)
             const material = new THREE.MeshPhysicalMaterial({
-              color: 0x9370db,
+              color: 0x1D4ED8, // Primary blue color
               metalness: 0.2,
               roughness: 0.4,
               clearcoat: 0.8,
               clearcoatRoughness: 0.2,
-              emissive: 0x330033,
-              emissiveIntensity: 0.5,
+              emissive: 0x10B981, // Accent green for subtle glow
+              emissiveIntensity: 0.3,
             })
             child.material = material
             child.castShadow = true
@@ -187,12 +187,12 @@ export function ShortsModel() {
       <div ref={containerRef} className="w-full h-full" />
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-purple-400 animate-pulse">Loading</div>
+          <div className="text-primary-600 animate-pulse">Loading</div>
         </div>
       )}
       {error && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-red-400">{error}</div>
+          <div className="text-red-500">{error}</div>
         </div>
       )}
     </div>

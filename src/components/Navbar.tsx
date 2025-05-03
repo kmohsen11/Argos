@@ -1,109 +1,87 @@
-import React, { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      if (offset > 50) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
-    <nav className="fixed w-full z-50">
-      {/* Top border with gradient */}
-      <div className="h-[2px] w-full bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600"></div>
-      
-      <div className="bg-black/90 backdrop-blur-sm border-b border-purple-500/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex-shrink-0">
-              <Link 
-                to="/" 
-                className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text hover:from-purple-500 hover:to-pink-700 transition-all"
-              >
-                ARGOS
-              </Link>
-            </div>
-            
-            {/* Desktop menu */}
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
-                <Link 
-                  to="/" 
-                  className="px-4 py-2 rounded-md text-sm font-medium text-purple-300 hover:text-white hover:bg-purple-500/10 border border-transparent hover:border-purple-500/50 transition-all duration-300"
-                >
-                  Home
-                </Link>
-                <Link 
-                  to="/products" 
-                  className="px-4 py-2 rounded-md text-sm font-medium text-purple-300 hover:text-white hover:bg-purple-500/10 border border-transparent hover:border-purple-500/50 transition-all duration-300"
-                >
-                  Products
-                </Link>
-                <Link 
-                  to="/about" 
-                  className="px-4 py-2 rounded-md text-sm font-medium text-purple-300 hover:text-white hover:bg-purple-500/10 border border-transparent hover:border-purple-500/50 transition-all duration-300"
-                >
-                  About
-                </Link>
-                <Link 
-                  to="/contact" 
-                  className="px-4 py-2 rounded-md text-sm font-medium text-purple-300 hover:text-white hover:bg-purple-500/10 border border-transparent hover:border-purple-500/50 transition-all duration-300"
-                >
-                  Contact
-                </Link>
-              </div>
-            </div>
-            
-            {/* Mobile menu button */}
-            <div className="md:hidden">
-              <button
-                onClick={toggleMenu}
-                className="inline-flex items-center justify-center p-2 rounded-md text-purple-400 hover:text-white hover:bg-purple-500/20 border border-transparent hover:border-purple-500/50 transition-all duration-300 focus:outline-none"
-              >
-                {isOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
-            </div>
-          </div>
+    <header className={`fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-md py-3' : 'bg-transparent py-4'}`}>
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex justify-between items-center">
+          <Link to="/" className="text-2xl font-bold text-primary-700">
+            NoLimit
+          </Link>
+          
+          {/* Desktop Menu */}
+          <nav className="hidden md:flex space-x-8">
+            <NavLink to="/">Home</NavLink>
+            <NavLink to="/products">Products</NavLink>
+            <NavLink to="/about">About</NavLink>
+            <NavLink to="/contact">Contact</NavLink>
+          </nav>
+          
+          {/* Mobile Menu Button */}
+          <button 
+            className="md:hidden p-2 rounded-lg text-primary-600 hover:bg-primary-50 transition-colors"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
-        
-        {/* Mobile menu */}
-        {isOpen && (
-          <div className="md:hidden border-t border-purple-500/20">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <Link 
-                to="/" 
-                className="block px-4 py-2 rounded-md text-base font-medium text-purple-300 hover:text-white hover:bg-purple-500/10 border border-transparent hover:border-purple-500/50 transition-all duration-300"
-              >
-                Home
-              </Link>
-              <Link 
-                to="/products" 
-                className="block px-4 py-2 rounded-md text-base font-medium text-purple-300 hover:text-white hover:bg-purple-500/10 border border-transparent hover:border-purple-500/50 transition-all duration-300"
-              >
-                Products
-              </Link>
-              <Link 
-                to="/about" 
-                className="block px-4 py-2 rounded-md text-base font-medium text-purple-300 hover:text-white hover:bg-purple-500/10 border border-transparent hover:border-purple-500/50 transition-all duration-300"
-              >
-                About
-              </Link>
-              <Link 
-                to="/contact" 
-                className="block px-4 py-2 rounded-md text-base font-medium text-purple-300 hover:text-white hover:bg-purple-500/10 border border-transparent hover:border-purple-500/50 transition-all duration-300"
-              >
-                Contact
-              </Link>
-            </div>
-          </div>
-        )}
       </div>
       
-      {/* Bottom shadow/glow effect */}
-      <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-purple-500/20 to-transparent"></div>
-    </nav>
+      {/* Mobile Menu */}
+      <div className={`md:hidden ${isOpen ? 'block' : 'hidden'}`}>
+        <div className="px-4 py-5 bg-white shadow-md space-y-3">
+          <MobileNavLink to="/" onClick={() => setIsOpen(false)}>Home</MobileNavLink>
+          <MobileNavLink to="/products" onClick={() => setIsOpen(false)}>Products</MobileNavLink>
+          <MobileNavLink to="/about" onClick={() => setIsOpen(false)}>About</MobileNavLink>
+          <MobileNavLink to="/contact" onClick={() => setIsOpen(false)}>Contact</MobileNavLink>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+const NavLink = ({ to, children }: { to: string; children: React.ReactNode }) => {
+  return (
+    <Link 
+      to={to} 
+      className="font-medium text-gray-700 hover:text-primary-600 transition-colors"
+    >
+      {children}
+    </Link>
+  );
+};
+
+const MobileNavLink = ({ to, onClick, children }: { to: string; onClick: () => void; children: React.ReactNode }) => {
+  return (
+    <Link 
+      to={to} 
+      className="block py-3 px-4 rounded-xl font-medium text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors"
+      onClick={onClick}
+    >
+      {children}
+    </Link>
   );
 };
 

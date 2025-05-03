@@ -1,0 +1,103 @@
+/* Animation classes for section transitions */
+.section-animation {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  will-change: opacity, transform;
+  position: relative; /* Ensure proper stacking */
+}
+
+.section-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered animations for items within sections */
+.stagger-item {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+  will-change: opacity, transform;
+}
+
+/* Add multiple stagger classes with increasing delays - reduced delays */
+.stagger-item-1 {
+  transition-delay: 0.05s;
+}
+
+.stagger-item-2 {
+  transition-delay: 0.1s;
+}
+
+.stagger-item-3 {
+  transition-delay: 0.15s;
+}
+
+.stagger-item-4 {
+  transition-delay: 0.2s;
+}
+
+.stagger-item-5 {
+  transition-delay: 0.25s;
+}
+
+/* Fade-in animation for elements that should appear gradually */
+.fade-in {
+  opacity: 0;
+  transition: opacity 0.6s ease-out;
+  will-change: opacity;
+}
+
+.fade-in.visible {
+  opacity: 1;
+}
+
+/* Scale animation for elements that should grow into view */
+.scale-in {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+  will-change: opacity, transform;
+}
+
+.scale-in.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Pulse animation for elements that need attention */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pulse {
+  animation: pulse 1.5s infinite;
+}
+
+/* Shimmer effect for loading states */
+@keyframes shimmer {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 100% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(255, 255, 255, 0.6) 50%, 
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+} 

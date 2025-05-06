@@ -110,9 +110,9 @@ const Home = () => {
         {/* Add a subtle gradient pattern that blends with next section */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-base to-surface"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            {/* Left column: Text content */}
-            <div className={`md:min-w-[45%] space-y-8 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'} transition-all duration-500 ease-out`}>
+          <div className="flex flex-col items-center text-center">
+            {/* Text content - centered */}
+            <div className={`max-w-3xl space-y-8 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'} transition-all duration-500 ease-out`}>
               <div className="inline-block px-6 py-3 rounded-xl bg-accent/10 border border-accent/20 text-accent font-medium">
                 Next Generation Athletic Wear
               </div>
@@ -124,11 +124,11 @@ const Home = () => {
                 </span>
               </h1>
               
-              <p className="text-textSecondary text-lg max-w-xl">
+              <p className="text-textSecondary text-lg mx-auto">
                 Experience the future of athletic wear with built-in AI injury prediction and performance tracking.
               </p>
               
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap justify-center gap-4">
                 <button 
                   onClick={() => navigate('/products')}
                   className="btn-primary flex items-center gap-2"
@@ -142,20 +142,6 @@ const Home = () => {
                 >
                   Learn More
                 </button>
-              </div>
-            </div>
-            
-            {/* Right column: Hero image with decoding async for better performance */}
-            <div className={`${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'} transition-all duration-500 ease-out delay-100`}>
-              <div className="relative rounded-card overflow-hidden" style={{ minHeight: '300px' }}>
-                <img
-                  src="/short.png"
-                  alt="AI Performance Shorts"
-                  className="w-full h-auto max-h-[650px] object-cover rounded-lg shadow-xl"
-                  loading="eager"
-                  decoding="async"
-                  fetchPriority="high"
-                />
               </div>
             </div>
           </div>

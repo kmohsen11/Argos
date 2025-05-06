@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ShoppingBag, CheckCircle, Heart, Zap, Shield, Smartphone } from 'lucide-react';
+import { ShoppingBag, CheckCircle, Heart, Zap, Shield, Smartphone, AlertTriangle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 // Throttle function to limit how often a function can be called
@@ -14,6 +14,33 @@ const throttle = <T extends (...args: unknown[]) => unknown>(func: T, limit: num
   };
 };
 
+// Toast notification component
+function Toast({ message, type, onClose }: { message: string; type: 'success' | 'error'; onClose: () => void }) {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onClose();
+    }, 5000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [onClose]);
+
+  return (
+    <div className={`fixed bottom-4 right-4 z-50 rounded-lg shadow-lg p-4 max-w-md flex items-center gap-3 ${
+      type === 'success' ? 'bg-accent/20 text-accent' : 'bg-red-500/20 text-red-400'
+    }`}>
+      <div className="flex-shrink-0">
+        {type === 'success' ? <CheckCircle size={20} /> : <AlertTriangle size={20} />}
+      </div>
+      <div>{message}</div>
+      <button onClick={onClose} className="ml-auto text-textSecondary hover:text-textPrimary">
+        &times;
+      </button>
+    </div>
+  );
+}
+
 const Products = () => {
   // Form state
   const [email, setEmail] = useState('');
@@ -25,6 +52,9 @@ const Products = () => {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  
+  // Toast notification state
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   
   // UI state
   const [isLoaded, setIsLoaded] = useState(false);
@@ -96,12 +126,49 @@ const Products = () => {
     };
   }, [handleScroll]);
 
+  // Function to send email notification
+  const sendEmailNotification = async () => {
+    try {
+      const response = await fetch('/api/sendPreorderEmail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          productType,
+          size,
+          deviceType,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'Failed to send email notification');
+      }
+
+      return true;
+    } catch (err) {
+      console.error('Email notification error:', err);
+      return false;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
     try {
+      // Validate email with basic regex
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        throw new Error('Please enter a valid email address');
+      }
+
+      // First, save to Supabase
       const { error: supabaseError } = await supabase
         .from('preorders')
         .insert([
@@ -116,10 +183,29 @@ const Products = () => {
           }
         ]);
 
-      if (supabaseError) throw supabaseError;
+      if (supabaseError) throw new Error(supabaseError.message);
+      
+      // Then, send email notification
+      await sendEmailNotification();
+      
       setSubmitted(true);
-    } catch (err) {
-      setError('Failed to submit pre-order. Please try again.');
+      
+      // Show success toast
+      setToast({
+        message: "We've received your pre-order! We'll be in touch soon.",
+        type: 'success'
+      });
+      
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to submit pre-order. Please try again.';
+      setError(errorMessage);
+      
+      // Show error toast
+      setToast({
+        message: "Something went wrong. Please try again or email us directly.",
+        type: 'error'
+      });
+      
       console.error('Error:', err);
     } finally {
       setLoading(false);
@@ -128,6 +214,15 @@ const Products = () => {
 
   return (
     <div className={`text-textPrimary ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}>
+      {/* Toast Notification */}
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast(null)} 
+        />
+      )}
+      
       {/* Header Section */}
       <section id="products-header" className="bg-base relative pt-24 pb-32 md:py-32 md:pb-40 section-visible">
         {/* Add a subtle gradient background */}
@@ -352,7 +447,7 @@ const Products = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="firstName" className="block text-sm font-medium text-textSecondary mb-2">
-                      First Name
+                      First Name *
                     </label>
                     <input
                       type="text"
@@ -366,7 +461,7 @@ const Products = () => {
                   </div>
                   <div>
                     <label htmlFor="lastName" className="block text-sm font-medium text-textSecondary mb-2">
-                      Last Name
+                      Last Name *
                     </label>
                     <input
                       type="text"
@@ -382,7 +477,7 @@ const Products = () => {
                 
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-textSecondary mb-2">
-                    Email Address
+                    Email Address *
                   </label>
                   <input
                     type="email"
@@ -392,13 +487,15 @@ const Products = () => {
                     className="w-full px-4 py-3 rounded-lg border border-gray-700 focus:ring-2 focus:ring-accent focus:border-transparent transition-all bg-surface text-textPrimary"
                     placeholder="you@example.com"
                     required
+                    pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
+                    title="Please enter a valid email address"
                   />
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="size" className="block text-sm font-medium text-textSecondary mb-2">
-                      Size
+                      Size *
                     </label>
                     <select
                       id="size"
@@ -417,7 +514,7 @@ const Products = () => {
                   </div>
                   <div>
                     <label htmlFor="deviceType" className="block text-sm font-medium text-textSecondary mb-2">
-                      Device Type
+                      Device Type *
                     </label>
                     <select
                       id="deviceType"
@@ -439,10 +536,19 @@ const Products = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="btn-primary w-full flex items-center justify-center gap-2"
+                    className="btn-primary w-full flex items-center justify-center gap-2 relative"
                   >
-                    {loading ? 'Processing...' : `Pre-order ${productType === 'shorts' ? 'Shorts' : 'Shirts'} Now`}
-                    {!loading && <ShoppingBag size={20} />}
+                    {loading ? (
+                      <>
+                        <span className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em]"></span>
+                        <span className="ml-2">Processing...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>{`Pre-order ${productType === 'shorts' ? 'Shorts' : 'Shirts'} Now`}</span>
+                        <ShoppingBag size={20} />
+                      </>
+                    )}
                   </button>
                 </div>
               </form>

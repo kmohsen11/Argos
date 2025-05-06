@@ -10,37 +10,19 @@ export default {
         'y-12': 'rotateY(12deg)',
       },
       colors: {
-        primary: {
-          DEFAULT: '#1D4ED8', // Deep blue
-          50: '#EFF6FF',
-          100: '#DBEAFE',
-          200: '#BFDBFE',
-          300: '#93C5FD',
-          400: '#60A5FA',
-          500: '#3B82F6',
-          600: '#1D4ED8', // Main primary color
-          700: '#1E40AF',
-          800: '#1E3A8A',
-          900: '#1E3A8A',
-        },
-        accent: {
-          DEFAULT: '#10B981', // Soft green
-          50: '#ECFDF5',
-          100: '#D1FAE5',
-          200: '#A7F3D0',
-          300: '#6EE7B7',
-          400: '#34D399',
-          500: '#10B981', // Main accent color
-          600: '#059669',
-          700: '#047857',
-          800: '#065F46',
-          900: '#064E3B',
-        },
+        base: '#000000',
+        accent: '#00E676',
+        surface: '#121212',
+        surfaceAlt: '#1E1E1E',
+        textPrimary: '#FFFFFF',
+        textSecondary: '#B0B0B0',
       },
       fontFamily: {
+        inter: ['Inter', 'system-ui', 'sans-serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
+        'card': '1rem',
         '2xl': '1rem',
       },
     },

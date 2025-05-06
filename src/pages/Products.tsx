@@ -103,78 +103,55 @@ const Products = () => {
   };
 
   return (
-    <div className="bg-gradient-to-b from-primary-50 to-white text-gray-900">
+    <div className="bg-base text-textPrimary">
       {/* Header Section */}
       <section id="products-header" className="pt-24 pb-12 section-animation">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary-100/50 to-white">
-          <div className={`absolute inset-0 bg-[linear-gradient(rgba(29,78,216,0.01)_2px,transparent_2px),linear-gradient(90deg,rgba(29,78,216,0.01)_2px,transparent_2px)] bg-[size:40px_40px] opacity-0 ${isLoaded ? 'opacity-100' : ''} transition-opacity duration-1000 ease-in-out`}></div>
-        </div>
-        
         <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 relative z-10">
-          <h1 className={`text-4xl sm:text-5xl font-bold mb-8 text-center text-primary-700 transform transition-all duration-700 ease-out ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>Our Products</h1>
+          <h1 className={`font-bold mb-8 text-center transform transition-all duration-700 ease-out ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>Our Products</h1>
         </div>
       </section>
       
       {/* Products Grid Section */}
-      <section id="products-grid" className="py-12 bg-gradient-to-b from-white to-primary-50 section-animation">
+      <section id="products-grid" className="py-20 bg-surface section-animation">
         <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow border border-gray-100">
-              <h2 className="text-2xl font-bold mb-4 text-primary-600">AI Performance Shorts</h2>
-              <p className="text-gray-700 mb-6">
-                Our flagship product featuring AI-powered injury prevention and performance tracking.
-                Built with advanced materials and embedded smart sensors.
-              </p>
-              <ul className="space-y-3 mb-6">
-                <li className="flex items-center">
-                  <span className="text-accent-500 mr-2">✓</span>
-                  <span className="text-gray-700">Real-time movement analysis</span>
-                </li>
-                <li className="flex items-center">
-                  <span className="text-accent-500 mr-2">✓</span>
-                  <span className="text-gray-700">Injury prevention alerts</span>
-                </li>
-                <li className="flex items-center">
-                  <span className="text-accent-500 mr-2">✓</span>
-                  <span className="text-gray-700">Performance metrics tracking</span>
-                </li>
-                <li className="flex items-center">
-                  <span className="text-accent-500 mr-2">✓</span>
-                  <span className="text-gray-700">Smart device integration</span>
-                </li>
-              </ul>
-            </div>
+          <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
+            <ProductCard 
+              title="AI Performance Shorts"
+              description="Our flagship product featuring AI-powered injury prevention and performance tracking. Built with advanced materials and embedded smart sensors."
+              features={[
+                "Real-time movement analysis",
+                "Injury prevention alerts",
+                "Performance metrics tracking",
+                "Smart device integration"
+              ]}
+            />
             
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow border border-gray-100">
-              <h2 className="text-2xl font-bold mb-4 text-primary-600">Coming Soon</h2>
-              <p className="text-gray-700 mb-6">
-                We're working on expanding our product line with more AI-powered athletic wear.
-                Stay tuned for updates!
-              </p>
-              <div className="h-40 flex items-center justify-center bg-gray-50 rounded-2xl">
-                <p className="text-gray-500">More products coming soon</p>
-              </div>
-            </div>
+            <ProductCard 
+              title="Coming Soon"
+              description="We're working on expanding our product line with more AI-powered athletic wear. Stay tuned for updates!"
+              features={[]}
+              comingSoon
+            />
           </div>
         </div>
       </section>
       
       {/* Pre-order Section */}
-      <section id="pre-order" className="py-12 bg-white section-animation">
+      <section id="pre-order" className="py-16 bg-surface section-animation">
         <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 pb-16">
-          <div className="bg-white rounded-2xl p-8 shadow-lg max-w-3xl mx-auto border border-gray-100">
-            <h2 className="text-3xl font-bold mb-6 text-center text-primary-700">Pre-order Now</h2>
+          <div className="card max-w-3xl mx-auto">
+            <h2 className="text-3xl font-bold mb-6 text-center text-textPrimary">Pre-order Now</h2>
             
             {!submitted ? (
               <form onSubmit={handleSubmit} className="space-y-6">
                 {error && (
-                  <div className="bg-red-50 text-red-500 p-4 rounded-2xl">
+                  <div className="bg-red-900/20 text-red-400 p-4 rounded-lg">
                     {error}
                   </div>
                 )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="firstName" className="block text-sm font-medium text-textSecondary mb-2">
                       First Name
                     </label>
                     <input
@@ -182,13 +159,13 @@ const Products = () => {
                       id="firstName"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
-                      className="w-full px-4 py-3 rounded-2xl border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-700 focus:ring-2 focus:ring-accent focus:border-transparent transition-all bg-surfaceAlt text-textPrimary"
                       placeholder="Enter your first name"
                       required
                     />
                   </div>
                   <div>
-                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="lastName" className="block text-sm font-medium text-textSecondary mb-2">
                       Last Name
                     </label>
                     <input
@@ -196,75 +173,94 @@ const Products = () => {
                       id="lastName"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
-                      className="w-full px-4 py-3 rounded-2xl border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-700 focus:ring-2 focus:ring-accent focus:border-transparent transition-all bg-surfaceAlt text-textPrimary"
                       placeholder="Enter your last name"
                       required
                     />
                   </div>
                 </div>
+                
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Email
+                  <label htmlFor="email" className="block text-sm font-medium text-textSecondary mb-2">
+                    Email Address
                   </label>
                   <input
                     type="email"
                     id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-3 rounded-2xl border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                    placeholder="Enter your email"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-700 focus:ring-2 focus:ring-accent focus:border-transparent transition-all bg-surfaceAlt text-textPrimary"
+                    placeholder="you@example.com"
                     required
                   />
                 </div>
-                <div>
-                  <label htmlFor="size" className="block text-sm font-medium text-gray-700 mb-2">
-                    Select Size
-                  </label>
-                  <select
-                    id="size"
-                    value={size}
-                    onChange={(e) => setSize(e.target.value)}
-                    className="w-full px-4 py-3 rounded-2xl border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                  >
-                    <option>XS</option>
-                    <option>S</option>
-                    <option>M</option>
-                    <option>L</option>
-                    <option>XL</option>
-                  </select>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="size" className="block text-sm font-medium text-textSecondary mb-2">
+                      Size
+                    </label>
+                    <select
+                      id="size"
+                      value={size}
+                      onChange={(e) => setSize(e.target.value)}
+                      className="w-full px-4 py-3 rounded-lg border border-gray-700 focus:ring-2 focus:ring-accent focus:border-transparent transition-all bg-surfaceAlt text-textPrimary"
+                      required
+                    >
+                      <option value="XS">XS</option>
+                      <option value="S">S</option>
+                      <option value="M">M</option>
+                      <option value="L">L</option>
+                      <option value="XL">XL</option>
+                      <option value="XXL">XXL</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="deviceType" className="block text-sm font-medium text-textSecondary mb-2">
+                      Device Type
+                    </label>
+                    <select
+                      id="deviceType"
+                      value={deviceType}
+                      onChange={(e) => setDeviceType(e.target.value)}
+                      className="w-full px-4 py-3 rounded-lg border border-gray-700 focus:ring-2 focus:ring-accent focus:border-transparent transition-all bg-surfaceAlt text-textPrimary"
+                      required
+                    >
+                      <option value="apple_watch">Apple Watch</option>
+                      <option value="fitbit">Fitbit</option>
+                      <option value="garmin">Garmin</option>
+                      <option value="samsung">Samsung</option>
+                      <option value="none">No Device</option>
+                    </select>
+                  </div>
                 </div>
-                <div>
-                  <label htmlFor="device" className="block text-sm font-medium text-gray-700 mb-2">
-                    Smart Device
-                  </label>
-                  <select
-                    id="device"
-                    value={deviceType}
-                    onChange={(e) => setDeviceType(e.target.value)}
-                    className="w-full px-4 py-3 rounded-2xl border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                
+                <div className="pt-4">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="btn-primary w-full flex items-center justify-center gap-2"
                   >
-                    <option value="apple_watch">Apple Watch</option>
-                    <option value="samsung_watch">Samsung Watch</option>
-                    <option value="whoop">Whoop</option>
-                    <option value="fitbit">Fitbit</option>
-                  </select>
+                    {loading ? 'Processing...' : 'Pre-order Now'}
+                    {!loading && <ShoppingBag size={20} />}
+                  </button>
                 </div>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full py-4 px-6 rounded-2xl bg-primary-600 text-white font-medium flex items-center justify-center space-x-2 hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
-                >
-                  <span>{loading ? 'Processing...' : 'Pre-order Now'}</span>
-                  <ShoppingBag size={20} />
-                </button>
               </form>
             ) : (
-              <div className="text-center py-8 space-y-4">
-                <CheckCircle className="mx-auto h-16 w-16 text-accent-500" />
-                <h3 className="text-2xl font-bold text-primary-700">Thank You!</h3>
-                <p className="text-gray-700">
-                  Your pre-order has been confirmed. We'll notify you when your AI-powered Performance Shorts are ready.
+              <div className="text-center py-8">
+                <div className="mx-auto w-16 h-16 mb-6 flex items-center justify-center bg-accent/10 text-accent rounded-full">
+                  <CheckCircle size={32} />
+                </div>
+                <h3 className="text-2xl font-bold mb-3 text-textPrimary">Pre-order Submitted</h3>
+                <p className="text-textSecondary mb-6">
+                  Thank you for your pre-order! We'll contact you with more information soon.
                 </p>
+                <button
+                  onClick={() => setSubmitted(false)}
+                  className="btn-secondary"
+                >
+                  Submit Another Pre-order
+                </button>
               </div>
             )}
           </div>
@@ -273,5 +269,41 @@ const Products = () => {
     </div>
   );
 };
+
+function ProductCard({ 
+  title, 
+  description, 
+  features, 
+  comingSoon = false 
+}: { 
+  title: string; 
+  description: string; 
+  features: string[];
+  comingSoon?: boolean;
+}) {
+  return (
+    <div className="card flex flex-col">
+      <h2 className="text-2xl font-bold mb-4 text-textPrimary">{title}</h2>
+      <p className="text-textSecondary mb-6">{description}</p>
+      
+      {!comingSoon && features.length > 0 && (
+        <ul className="space-y-3 mb-6">
+          {features.map((feature, index) => (
+            <li key={index} className="flex items-center">
+              <span className="text-accent mr-2">✓</span>
+              <span className="text-textSecondary">{feature}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      
+      {comingSoon && (
+        <div className="h-40 flex items-center justify-center bg-surfaceAlt rounded-lg mt-auto">
+          <p className="text-textSecondary">More products coming soon</p>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default Products; 

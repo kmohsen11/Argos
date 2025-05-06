@@ -23,11 +23,15 @@ const Navbar = () => {
     };
   }, []);
 
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
-    <header className={`fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-md py-3' : 'bg-transparent py-4'}`}>
+    <header className={`fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-black shadow-md py-3' : 'bg-black py-4'}`}>
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center">
-          <Link to="/" className="text-2xl font-bold text-primary-700">
+          <Link to="/" className="text-2xl font-bold text-textPrimary">
             NoLimit
           </Link>
           
@@ -39,10 +43,19 @@ const Navbar = () => {
             <NavLink to="/contact">Contact</NavLink>
           </nav>
           
+          {/* Call to Action */}
+          <div className="hidden md:block">
+            <Link to="/products" className="btn-primary">
+              Get Started
+            </Link>
+          </div>
+          
           {/* Mobile Menu Button */}
           <button 
-            className="md:hidden p-2 rounded-lg text-primary-600 hover:bg-primary-50 transition-colors"
-            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden p-2 rounded-lg text-textPrimary hover:bg-accent/10 transition-colors"
+            onClick={toggleMenu}
+            aria-label="Toggle navigation"
+            aria-expanded={isOpen}
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -50,12 +63,20 @@ const Navbar = () => {
       </div>
       
       {/* Mobile Menu */}
-      <div className={`md:hidden ${isOpen ? 'block' : 'hidden'}`}>
-        <div className="px-4 py-5 bg-white shadow-md space-y-3">
+      <div 
+        className={`md:hidden ${isOpen ? 'block' : 'hidden'}`}
+        aria-hidden={!isOpen}
+      >
+        <div className="px-4 py-5 bg-black shadow-md space-y-3">
           <MobileNavLink to="/" onClick={() => setIsOpen(false)}>Home</MobileNavLink>
           <MobileNavLink to="/products" onClick={() => setIsOpen(false)}>Products</MobileNavLink>
           <MobileNavLink to="/about" onClick={() => setIsOpen(false)}>About</MobileNavLink>
           <MobileNavLink to="/contact" onClick={() => setIsOpen(false)}>Contact</MobileNavLink>
+          <div className="pt-2">
+            <Link to="/products" className="btn-primary block text-center" onClick={() => setIsOpen(false)}>
+              Get Started
+            </Link>
+          </div>
         </div>
       </div>
     </header>
@@ -66,7 +87,7 @@ const NavLink = ({ to, children }: { to: string; children: React.ReactNode }) =>
   return (
     <Link 
       to={to} 
-      className="font-medium text-gray-700 hover:text-primary-600 transition-colors"
+      className="font-medium text-textSecondary hover:text-accent transition-colors"
     >
       {children}
     </Link>
@@ -77,7 +98,7 @@ const MobileNavLink = ({ to, onClick, children }: { to: string; onClick: () => v
   return (
     <Link 
       to={to} 
-      className="block py-3 px-4 rounded-xl font-medium text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors"
+      className="block py-3 px-4 rounded-xl font-medium text-textSecondary hover:bg-accent/10 hover:text-accent transition-colors"
       onClick={onClick}
     >
       {children}

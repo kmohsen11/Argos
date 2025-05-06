@@ -12,8 +12,49 @@ html, body {
   padding: 0;
 }
 
+/* Base body font & color */
 body {
+  @apply font-inter text-textPrimary bg-base;
   position: relative;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+  @apply font-bold text-textPrimary;
+}
+
+p, span, li {
+  @apply text-textSecondary;
+}
+
+h1 {
+  font-size: clamp(2.2rem, 4vw + 1rem, 4rem);
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-accent text-black font-semibold px-6 py-3 rounded-lg transition-transform shadow-md hover:scale-105;
+  }
+  
+  .btn-primary:hover {
+    box-shadow: 0 4px 16px rgba(0, 230, 118, 0.4);
+    transform: scale(1.05);
+  }
+  
+  .btn-secondary {
+    @apply border border-textPrimary text-textPrimary px-6 py-3 rounded-lg hover:bg-white/10;
+  }
+  
+  .card {
+    @apply bg-surface rounded-card p-6 transition-all hover:-translate-y-1;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  }
+  
+  .card:hover {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
+    transform: translateY(-4px) scale(1.02);
+  }
 }
 
 @keyframes float {

@@ -71,7 +71,7 @@ const About = () => {
           </h1>
           <p className={`text-xl text-textSecondary mb-8 text-center transform transition-all duration-700 ease-out delay-100 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
             Revolutionizing athletic wear with AI-powered technology
-          </p>
+            </p>
         </div>
       </section>
       
@@ -97,53 +97,53 @@ const About = () => {
                 <li className="flex items-start gap-3">
                   <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
                     <Users className="h-4 w-4 text-accent" />
-                  </div>
+                </div>
                   <div>
                     <h3 className="font-semibold">Community</h3>
                     <p className="text-textSecondary text-sm">Building products with and for athletes at all levels.</p>
-                  </div>
+              </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
                     <Target className="h-4 w-4 text-accent" />
-                  </div>
+                </div>
                   <div>
                     <h3 className="font-semibold">Innovation</h3>
                     <p className="text-textSecondary text-sm">Constantly pushing boundaries of what's possible.</p>
-                  </div>
+              </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
                     <Award className="h-4 w-4 text-accent" />
-                  </div>
+                </div>
                   <div>
                     <h3 className="font-semibold">Excellence</h3>
                     <p className="text-textSecondary text-sm">Holding ourselves to the highest standards in everything we do.</p>
-                  </div>
+              </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
                     <Heart className="h-4 w-4 text-accent" />
-                  </div>
+                </div>
                   <div>
                     <h3 className="font-semibold">Health</h3>
                     <p className="text-textSecondary text-sm">Improving athletes' health and performance longevity.</p>
-                  </div>
+              </div>
                 </li>
               </ul>
             </div>
           </div>
           
           <div className="card text-center py-8">
-            <h2 className="text-2xl font-bold mb-4">Join Us on Our Journey</h2>
+              <h2 className="text-2xl font-bold mb-4">Join Us on Our Journey</h2>
             <p className="text-textSecondary mb-4 max-w-2xl mx-auto">
               We're just getting started. Our vision goes beyond creating products – we're building a future where 
-              technology enhances human athletic potential while protecting health and longevity.
-            </p>
+                technology enhances human athletic potential while protecting health and longevity.
+              </p>
             <p className="text-textSecondary max-w-2xl mx-auto">
-              Whether you're a professional athlete, a weekend warrior, or someone who's just starting their fitness journey,
-              we're building NoLimit for you.
-            </p>
+                Whether you're a professional athlete, a weekend warrior, or someone who's just starting their fitness journey,
+                we're building NoLimit for you.
+              </p>
           </div>
         </div>
       </section>

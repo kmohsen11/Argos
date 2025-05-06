@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Linkedin, Twitter, Instagram } from 'lucide-react';
 
 // Throttle function to limit how often a function can be called
 const throttle = <T extends (...args: unknown[]) => unknown>(func: T, limit: number): ((...args: Parameters<T>) => void) => {
@@ -69,61 +70,66 @@ const Contact = () => {
           <h1 className={`font-bold mb-8 text-center transform transition-all duration-700 ease-out ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
             Contact Us
           </h1>
-          <p className="text-textSecondary mb-8 text-center max-w-3xl mx-auto">
-            Have questions about our products or technology? Our team is here to help. Reach out to us using any of the methods below.
-          </p>
+         
         </div>
       </section>
       
+     
       {/* Contact Methods */}
       <section id="contact-methods" className="py-16 bg-surface section-animation">
         <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <div className="space-y-8">
-              <h2 className="text-3xl font-bold mb-6">Get in Touch</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="card">
+              <h2 className="text-2xl font-bold mb-6">Get in Touch</h2>
+              <p className="text-textSecondary mb-8">
+                Have questions about our products or want to learn more? We'd love to hear from you.
+                Reach out to our team directly using the contact information below.
+              </p>
               
-              <div className="space-y-6">
-                <div className="flex items-start space-x-4">
-                  <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </div>
+              <div className="space-y-8">
                   <div>
-                    <h3 className="text-lg font-semibold mb-1">Email</h3>
-                    <div className="space-y-1">
-                      <div>
-                        <p className="text-sm text-textSecondary">Product Inquiries:</p>
-                        <a href="mailto:fpmmsilva@gmail.com" className="text-textSecondary hover:text-accent transition-colors">
-                          info@nolimit.tech
+                    <h3 className="font-bold text-lg mb-2">Team</h3>
+                    <div className="space-y-4">
+                    <div className="bg-surfaceAlt p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                      <h4 className="font-bold text-accent">Fernando Silva - CEO</h4>
+                      <a href="mailto:fernando@nolimit.com" className="text-textSecondary hover:text-accent transition-colors">
+                          fernando@nolimit.com
                         </a>
                       </div>
-                      <div>
-                        <p className="text-sm text-textSecondary">Support:</p>
-                        <a href="mailto:sadri.dridi@uni.minerva.edu" className="text-textSecondary hover:text-accent transition-colors">
-                          support@nolimit.tech
+                    <div className="bg-surfaceAlt p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                      <h4 className="font-bold text-accent">Sadri Dridi - CTO</h4>
+                      <a href="mailto:sadri@nolimit.com" className="text-textSecondary hover:text-accent transition-colors">
+                          sadri@nolimit.com
                         </a>
                       </div>
-                      <div>
-                        <p className="text-sm text-textSecondary">Press:</p>
-                        <a href="mailto:Khaled@uni.minerva.edu" className="text-textSecondary hover:text-accent transition-colors">
-                          press@nolimit.tech
+                    <div className="bg-surfaceAlt p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                      <h4 className="font-bold text-accent">Khaled Ahmed - CPO</h4>
+                      <a href="mailto:khaled@nolimit.com" className="text-textSecondary hover:text-accent transition-colors">
+                          khaled@nolimit.com
                         </a>
-                      </div>
                     </div>
                   </div>
                 </div>
                 
-                <div className="flex items-start space-x-4">
-                  <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                  </div>
                   <div>
-                    <h3 className="text-lg font-semibold mb-1">Office</h3>
+                    <h3 className="font-bold text-lg mb-2">Our Location</h3>
+                  <div className="bg-surfaceAlt p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                     <p className="text-textSecondary">2 Marina Boulevard<br />San Francisco, CA 94123</p>
+                  </div>
+                </div>
+                
+                <div className="pt-4">
+                  <h3 className="font-bold text-lg mb-4">Follow Us</h3>
+                  <div className="flex space-x-4">
+                    <a href="#" className="bg-accent/10 p-4 rounded-xl hover:bg-accent/20 transition-colors shadow-sm hover:shadow-md">
+                      <Linkedin className="text-accent" size={20} />
+                    </a>
+                    <a href="https://x.com/trynolimit" className="bg-accent/10 p-4 rounded-xl hover:bg-accent/20 transition-colors shadow-sm hover:shadow-md">
+                      <Twitter className="text-accent" size={20} />
+                    </a>
+                    <a href="#" className="bg-accent/10 p-4 rounded-xl hover:bg-accent/20 transition-colors shadow-sm hover:shadow-md">
+                      <Instagram className="text-accent" size={20} />
+                    </a>
                   </div>
                 </div>
               </div>
@@ -141,7 +147,7 @@ const Contact = () => {
                       type="text"
                       id="name"
                       className="w-full px-4 py-3 rounded-lg border border-gray-700 focus:ring-2 focus:ring-accent focus:border-transparent transition-all bg-surfaceAlt text-textPrimary"
-                      placeholder="John Doe"
+                      placeholder="Amazing Athlete"
                     />
                   </div>
                   <div>
@@ -155,8 +161,8 @@ const Contact = () => {
                       placeholder="you@example.com"
                     />
                   </div>
-                </div>
-                
+              </div>
+              
                 <div>
                   <label htmlFor="subject" className="block text-sm font-medium text-textSecondary mb-2">
                     Subject
@@ -167,8 +173,8 @@ const Contact = () => {
                     className="w-full px-4 py-3 rounded-lg border border-gray-700 focus:ring-2 focus:ring-accent focus:border-transparent transition-all bg-surfaceAlt text-textPrimary"
                     placeholder="What's this about?"
                   />
-                </div>
-                
+              </div>
+              
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium text-textSecondary mb-2">
                     Message
@@ -179,7 +185,7 @@ const Contact = () => {
                     className="w-full px-4 py-3 rounded-lg border border-gray-700 focus:ring-2 focus:ring-accent focus:border-transparent transition-all bg-surfaceAlt text-textPrimary"
                     placeholder="Tell us how we can help..."
                   ></textarea>
-                </div>
+              </div>
                 
                 <button
                   type="submit"

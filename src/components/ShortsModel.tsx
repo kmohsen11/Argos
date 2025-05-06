@@ -4,101 +4,78 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { Group, Object3D } from 'three'
 
+// Create a loader singleton to avoid recreating it
+const fbxLoader = new FBXLoader();
+
 export function ShortsModel() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const rendererRef = useRef<THREE.WebGLRenderer | null>(null)
+  const sceneRef = useRef<THREE.Scene | null>(null)
   const [loading, setLoading] = useState(true)
+  const [loadingProgress, setLoadingProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
   
   useEffect(() => {
     if (!containerRef.current) return
     
-    console.log('Initializing 3D model container')
+    // Early return if already initialized
+    if (rendererRef.current) return
 
-    // Scene setup
+    // Setup with reduced quality for faster loading
     const scene = new THREE.Scene()
     scene.background = null // Make background transparent
+    sceneRef.current = scene
 
-    // Camera setup
-    const camera = new THREE.PerspectiveCamera(50, containerRef.current.clientWidth / containerRef.current.clientHeight, 0.1, 1000)
+    // Camera with reduced quality
+    const camera = new THREE.PerspectiveCamera(50, containerRef.current.clientWidth / containerRef.current.clientHeight, 0.1, 100)
     camera.position.set(3, 2, 3)
     camera.lookAt(0, 0, 0)
 
-    // Renderer setup
+    // Renderer with lower quality settings for faster rendering
     const renderer = new THREE.WebGLRenderer({ 
-      antialias: true,
+      antialias: false, // Disable antialiasing for performance
       alpha: true,
+      powerPreference: 'high-performance'
     })
     renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight)
-    renderer.shadowMap.enabled = true
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap
+    renderer.shadowMap.enabled = false // Disable shadows for initial load
     renderer.outputColorSpace = THREE.SRGBColorSpace
-    renderer.toneMapping = THREE.ACESFilmicToneMapping
-    renderer.toneMappingExposure = 1.5
-    renderer.setClearColor(0x000000, 0) // Make background transparent
+    renderer.toneMapping = THREE.NoToneMapping // Simpler tone mapping
+    renderer.setClearColor(0x000000, 0)
     containerRef.current.appendChild(renderer.domElement)
+    rendererRef.current = renderer
     
-    console.log('Renderer added to container')
-
-    // Add colored lights for better visibility
+    // Simpler lighting setup
     const ambientLight = new THREE.AmbientLight(0xffffff, 2)
     scene.add(ambientLight)
 
-    // Add key light (white)
+    // Just one directional light for better performance
     const keyLight = new THREE.DirectionalLight(0xffffff, 4)
     keyLight.position.set(5, 5, 5)
-    keyLight.castShadow = true
     scene.add(keyLight)
     
-    // Add fill light (primary blue tint)
-    const fillLight = new THREE.DirectionalLight(0x1D4ED8, 3)
-    fillLight.position.set(-5, 0, 5)
-    scene.add(fillLight)
-    
-    // Add rim light (accent green tint)
-    const rimLight = new THREE.DirectionalLight(0x10B981, 3)
-    rimLight.position.set(0, 5, -5)
-    scene.add(rimLight)
-
-    // Add point lights for extra glow
-    const pointLight1 = new THREE.PointLight(0x1D4ED8, 1, 10)
-    pointLight1.position.set(2, 2, 2)
-    scene.add(pointLight1)
-
-    const pointLight2 = new THREE.PointLight(0x10B981, 1, 10)
-    pointLight2.position.set(-2, -2, -2)
-    scene.add(pointLight2)
-    
-    console.log('Lights added to scene')
-
-    // Orbit controls
+    // Simplified controls
     const controls = new OrbitControls(camera, renderer.domElement)
     controls.enableDamping = true
     controls.dampingFactor = 0.05
     controls.minDistance = 2
     controls.maxDistance = 10
     controls.autoRotate = true
-    controls.autoRotateSpeed = 2.0
-    controls.target.set(0, 0.5, 0) // Look at center of shorts
+    controls.autoRotateSpeed = 1.0
+    controls.target.set(0, 0.5, 0)
     controls.update()
     
-    console.log('Controls initialized')
-
-    // Load FBX model
-    const loader = new FBXLoader()
-    console.log('Starting to load model from /shorts.fbx')
-    
-    loader.load(
+    // Load FBX model with progress tracking
+    fbxLoader.load(
       '/shorts.fbx',
       (fbx: Group) => {
-        console.log('Model loaded successfully', fbx)
-        
         // Center the model
         const box = new THREE.Box3().setFromObject(fbx)
         const center = box.getCenter(new THREE.Vector3())
         fbx.position.sub(center)
-        fbx.position.y += 1 // Raise shorts up a bit
+        fbx.position.y += 1
         
-        // Scale the model appropriately
+        // Scale the model
         const size = box.getSize(new THREE.Vector3())
         const maxDim = Math.max(size.x, size.y, size.z)
         const scale = 2 / maxDim
@@ -107,34 +84,37 @@ export function ShortsModel() {
         // Rotate to face camera
         fbx.rotation.y = Math.PI / 4
         
-        console.log('Model centered and scaled', { center, size, scale })
-
-        // Add materials
+        // Simplified material application - one material for all meshes
+        const material = new THREE.MeshPhysicalMaterial({
+          color: 0x1D4ED8,
+          metalness: 0.2,
+          roughness: 0.4,
+          clearcoat: 0.5,
+          emissive: 0x10B981,
+          emissiveIntensity: 0.2,
+        })
+        
         fbx.traverse((child: Object3D) => {
           if (child instanceof THREE.Mesh) {
-            console.log('Applying material to mesh', child)
-            const material = new THREE.MeshPhysicalMaterial({
-              color: 0x1D4ED8, // Primary blue color
-              metalness: 0.2,
-              roughness: 0.4,
-              clearcoat: 0.8,
-              clearcoatRoughness: 0.2,
-              emissive: 0x10B981, // Accent green for subtle glow
-              emissiveIntensity: 0.3,
-            })
             child.material = material
-            child.castShadow = true
-            child.receiveShadow = true
           }
         })
 
         scene.add(fbx)
-        console.log('Model added to scene')
+        
+        // Gradually enable better quality after model loads
+        setTimeout(() => {
+          if (rendererRef.current) {
+            rendererRef.current.shadowMap.enabled = true;
+            rendererRef.current.toneMapping = THREE.ACESFilmicToneMapping;
+          }
+        }, 500);
+        
         setLoading(false)
       },
       (xhr) => {
-        const percent = (xhr.loaded / xhr.total) * 100
-        console.log(`Loading model: ${percent.toFixed(2)}% loaded`)
+        const percent = xhr.loaded / (xhr.total || 1) * 100
+        setLoadingProgress(Math.min(percent, 99))
       },
       (error) => {
         console.error('Error loading model:', error)
@@ -143,42 +123,48 @@ export function ShortsModel() {
       }
     )
 
-    // Animation loop with glowing effect
+    // Simplified animation loop
+    let animationFrameId: number;
     const animate = () => {
-      requestAnimationFrame(animate)
-      
-      // Animate point lights
-      const time = Date.now() * 0.001
-      pointLight1.position.x = Math.sin(time) * 3
-      pointLight1.position.z = Math.cos(time) * 3
-      pointLight2.position.x = Math.sin(time + Math.PI) * 3
-      pointLight2.position.z = Math.cos(time + Math.PI) * 3
-      
+      animationFrameId = requestAnimationFrame(animate)
       controls.update()
       renderer.render(scene, camera)
     }
     animate()
     
-    console.log('Animation loop started')
-
-    // Handle window resize
+    // Handle window resize - throttled
+    let resizeTimeout: NodeJS.Timeout;
     const handleResize = () => {
-      if (!containerRef.current) return
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        if (!containerRef.current || !rendererRef.current) return
       
       const width = containerRef.current.clientWidth
       const height = containerRef.current.clientHeight
       
       camera.aspect = width / height
       camera.updateProjectionMatrix()
-      renderer.setSize(width, height)
+        rendererRef.current.setSize(width, height)
+      }, 250);
     }
     window.addEventListener('resize', handleResize)
 
     // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize)
-      containerRef.current?.removeChild(renderer.domElement)
-      renderer.dispose()
+      cancelAnimationFrame(animationFrameId);
+      
+      if (rendererRef.current && containerRef.current) {
+        containerRef.current.removeChild(rendererRef.current.domElement)
+        rendererRef.current.dispose()
+        rendererRef.current = null
+      }
+      
+      // Clear the scene
+      if (sceneRef.current) {
+        sceneRef.current.clear()
+        sceneRef.current = null
+      }
     }
   }, [])
 
@@ -186,13 +172,16 @@ export function ShortsModel() {
     <div className="w-full h-full relative">
       <div ref={containerRef} className="w-full h-full" />
       {loading && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-primary-600 animate-pulse">Loading</div>
+        <div className="absolute inset-0 flex items-center justify-center bg-surface/30 backdrop-blur-sm">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-accent/20 border-t-accent rounded-full animate-spin mx-auto mb-2"></div>
+            <div className="text-textSecondary text-sm">{loadingProgress.toFixed(0)}%</div>
+          </div>
         </div>
       )}
       {error && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-red-500">{error}</div>
+        <div className="absolute inset-0 flex items-center justify-center bg-surface/60">
+          <div className="text-red-500 p-4 rounded-lg bg-surface shadow-lg">{error}</div>
         </div>
       )}
     </div>

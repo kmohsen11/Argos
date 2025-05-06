@@ -47,7 +47,7 @@ h1 {
   }
   
   .card {
-    @apply bg-surface rounded-card p-6 transition-all hover:-translate-y-1;
+    @apply rounded-card p-6 transition-all hover:-translate-y-1;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   }
   
@@ -96,17 +96,46 @@ h1 {
   transform: translateY(0);
 }
 
-/* Optimized section animations for better performance */
+/* Performance optimizations for animations */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Optimize section animations - ensure always visible by default */
 .section-animation {
-  opacity: 0;
-  transform: translate3d(0, 20px, 0);
   will-change: opacity, transform;
-  transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Faster transition */
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease-out, transform 0.5s ease-out;
 }
 
 .section-visible {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
+  opacity: 1 !important; /* Force visibility */
+  transform: translateY(0) !important; /* Force correct position */
+  transition: opacity 0.4s ease-out, transform 0.5s ease-out;
+}
+
+/* Use hardware acceleration for certain animations */
+.hw-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimize image loading */
+img {
+  content-visibility: auto;
+}
+
+/* Add lazy loading for off-screen content */
+.lazy-content {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
 }
 
 /* Simpler animations for staggered elements */

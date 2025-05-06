@@ -126,36 +126,6 @@ const Products = () => {
     };
   }, [handleScroll]);
 
-  // Function to send email notification
-  const sendEmailNotification = async () => {
-    try {
-      const response = await fetch('/api/sendPreorderEmail', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-          productType,
-          size,
-          deviceType,
-        }),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || 'Failed to send email notification');
-      }
-
-      return true;
-    } catch (err) {
-      console.error('Email notification error:', err);
-      return false;
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -168,7 +138,7 @@ const Products = () => {
         throw new Error('Please enter a valid email address');
       }
 
-      // First, save to Supabase
+      // Save to Supabase
       const { error: supabaseError } = await supabase
         .from('preorders')
         .insert([
@@ -184,9 +154,6 @@ const Products = () => {
         ]);
 
       if (supabaseError) throw new Error(supabaseError.message);
-      
-      // Then, send email notification
-      await sendEmailNotification();
       
       setSubmitted(true);
       

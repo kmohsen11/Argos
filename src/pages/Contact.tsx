@@ -92,20 +92,20 @@ const Contact = () => {
                     <div className="space-y-4">
                     <div className="bg-surfaceAlt p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                       <h4 className="font-bold text-accent">Fernando Silva - CEO</h4>
-                      <a href="mailto:fernando@nolimit.com" className="text-textSecondary hover:text-accent transition-colors">
-                          fernando@nolimit.com
+                      <a href="mailto:fernando@nolimit.pro" className="text-textSecondary hover:text-accent transition-colors">
+                          fernando@nolimit.pro
                         </a>
                       </div>
                     <div className="bg-surfaceAlt p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                       <h4 className="font-bold text-accent">Sadri Dridi - CTO</h4>
-                      <a href="mailto:sadri@nolimit.com" className="text-textSecondary hover:text-accent transition-colors">
-                          sadri@nolimit.com
+                      <a href="mailto:sadri@nolimit.pro" className="text-textSecondary hover:text-accent transition-colors">
+                          sadri@nolimit.pro
                         </a>
                       </div>
                     <div className="bg-surfaceAlt p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                       <h4 className="font-bold text-accent">Khaled Ahmed - CPO</h4>
-                      <a href="mailto:khaled@nolimit.com" className="text-textSecondary hover:text-accent transition-colors">
-                          khaled@nolimit.com
+                      <a href="mailto:khaled@nolimit.pro" className="text-textSecondary hover:text-accent transition-colors">
+                          khaled@nolimit.pro
                         </a>
                     </div>
                   </div>

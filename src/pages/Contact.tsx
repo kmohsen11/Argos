@@ -121,13 +121,13 @@ const Contact = () => {
                 <div className="pt-4">
                   <h3 className="font-bold text-lg mb-4">Follow Us</h3>
                   <div className="flex space-x-4">
-                    <a href="#" className="bg-accent/10 p-4 rounded-xl hover:bg-accent/20 transition-colors shadow-sm hover:shadow-md">
+                    <a href="https://linkedin.com/company/NoLimit" className="bg-accent/10 p-4 rounded-xl hover:bg-accent/20 transition-colors shadow-sm hover:shadow-md">
                       <Linkedin className="text-accent" size={20} />
                     </a>
-                    <a href="https://x.com/trynolimit" className="bg-accent/10 p-4 rounded-xl hover:bg-accent/20 transition-colors shadow-sm hover:shadow-md">
+                    <a href="https://twitter.com/NoLimit" className="bg-accent/10 p-4 rounded-xl hover:bg-accent/20 transition-colors shadow-sm hover:shadow-md">
                       <Twitter className="text-accent" size={20} />
                     </a>
-                    <a href="#" className="bg-accent/10 p-4 rounded-xl hover:bg-accent/20 transition-colors shadow-sm hover:shadow-md">
+                    <a href="https://instagram.com/NoLimit" className="bg-accent/10 p-4 rounded-xl hover:bg-accent/20 transition-colors shadow-sm hover:shadow-md">
                       <Instagram className="text-accent" size={20} />
                     </a>
                   </div>

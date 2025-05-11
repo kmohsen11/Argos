@@ -1,4 +1,6 @@
 @import './styles/animations.css';
+@import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -24,26 +26,36 @@ h1, h2, h3, h4 {
   @apply font-bold text-textPrimary;
 }
 
+h1, h2 {
+  @apply font-oxanium;
+}
+
 p, span, li {
   @apply text-textSecondary;
 }
 
 h1 {
-  font-size: clamp(2.2rem, 4vw + 1rem, 4rem);
+  font-size: clamp(2.5rem, 5vw + 1rem, 4.5rem);
+  letter-spacing: -0.025em;
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-accent text-black font-semibold px-6 py-3 rounded-lg transition-transform shadow-md hover:scale-105;
+    @apply bg-white text-black font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:scale-105;
   }
   
   .btn-primary:hover {
-    box-shadow: 0 4px 16px rgba(0, 230, 118, 0.4);
-    transform: scale(1.05);
+    transform: scale(1.02);
+    transition: all 0.3s;
   }
   
   .btn-secondary {
-    @apply border border-textPrimary text-textPrimary px-6 py-3 rounded-lg hover:bg-white/10;
+    @apply border border-white text-white px-6 py-3 rounded-lg hover:bg-white/10 transition-all duration-300;
+  }
+  
+  .btn-secondary:hover {
+    transform: scale(1.02);
+    transition: all 0.3s;
   }
   
   .card {
@@ -54,6 +66,80 @@ h1 {
   .card:hover {
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
     transform: translateY(-4px) scale(1.02);
+  }
+
+  .nav-link {
+    @apply relative py-2 px-1 font-medium text-textSecondary transition-colors duration-300 hover:text-white;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 4px;
+    background-color: #0061FF;
+    transition: width 0.3s ease;
+  }
+
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    width: 100%;
+  }
+
+  .color-swatch {
+    @apply w-12 h-12 rounded-full cursor-pointer transition-all duration-300;
+    border: 2px solid transparent;
+  }
+
+  .color-swatch.active {
+    @apply border-accent;
+    transform: scale(1.1);
+  }
+
+  .pulse-dot {
+    position: relative;
+  }
+
+  .pulse-dot::before {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #0061FF;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .pulse-dot::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: rgba(0, 97, 255, 0.5);
+    left: -16px;
+    top: 50%;
+    transform: translateY(-50%);
+    animation: pulse 2s infinite;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: translateY(-50%) scale(0.7);
+    opacity: 0.8;
+  }
+  70% {
+    transform: translateY(-50%) scale(1.2);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(-50%) scale(0.7);
+    opacity: 0;
   }
 }
 
@@ -94,6 +180,19 @@ h1 {
 .scroll-reveal.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+.ghost-text {
+  position: absolute;
+  font-size: clamp(10rem, 20vw, 20rem);
+  font-weight: 800;
+  opacity: 0.15;
+  white-space: nowrap;
+  color: white;
+  pointer-events: none;
+  z-index: 0;
+  text-transform: uppercase;
+  letter-spacing: -0.05em;
 }
 
 /* Performance optimizations for animations */
@@ -153,4 +252,48 @@ img {
 
 .section-visible .animate-stagger-3 {
   animation: fadeIn 0.4s ease-out 0.15s forwards; /* Faster animation */
+}
+
+/* Product image enhancements */
+.product-image {
+  position: relative;
+  isolation: isolate;
+}
+
+.product-image img {
+  max-width: 100%;
+  height: auto;
+  transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+.product-image:hover img {
+  transform: translateY(-10px);
+  filter: brightness(1.1);
+}
+
+.product-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 97, 255, 0.15) 0%, rgba(0, 97, 255, 0) 70%);
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  opacity: 0.6;
+  filter: blur(30px);
+  transition: opacity 0.5s ease, width 0.5s ease, height 0.5s ease;
+}
+
+.product-image:hover .product-glow {
+  opacity: 0.8;
+  width: 100%;
+  height: 100%;
+}
+
+/* Image with transparent background treatment */
+.transparent-bg-image {
+  mix-blend-mode: normal;
+  filter: drop-shadow(0 10px 20px rgba(0, 97, 255, 0.2));
 }

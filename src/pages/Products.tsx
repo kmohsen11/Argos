@@ -238,7 +238,7 @@ const Products = () => {
                   AI Performance Shorts
                 </h2>
                 <p className="text-base/relaxed text-textSecondary">
-                  Our flagship product featuring AI-powered injury prevention and performance tracking. Built with advanced materials and embedded smart sensors.
+                  Our flagship product featuring AI-powered injury prediction and performance tracking. Built with advanced materials and embedded smart sensors.
                 </p>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
@@ -248,7 +248,7 @@ const Products = () => {
                   />
                   <FeatureItem 
                     icon={<Shield className="text-accent" size={20} />} 
-                    text="Injury prevention alerts"
+                    text="Injury prediction alerts"
                   />
                   <FeatureItem 
                     icon={<Heart className="text-accent" size={20} />} 

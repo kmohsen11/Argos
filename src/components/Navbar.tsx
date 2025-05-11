@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Search, ShoppingCart, User } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 // Navigation links configuration
 const NAV_LINKS = [
@@ -44,8 +44,8 @@ const Navbar = () => {
       <div className="max-w-1280 mx-auto px-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link to="/" className="text-2xl font-bold text-textPrimary font-oxanium">
-            NoLimit
+          <Link to="/" className="flex items-center">
+            <img src="/logo.png" alt="NoLimit Logo" className="h-20 w-auto" />
           </Link>
           
           {/* Desktop Menu */}

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { ArrowRight, ChevronDown, ChevronRight } from 'lucide-react';
+import { ArrowRight, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Home = () => {

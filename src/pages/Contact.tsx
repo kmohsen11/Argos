@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Linkedin, Twitter, Instagram } from 'lucide-react';
 
 // Throttle function to limit how often a function can be called
 const throttle = <T extends (...args: unknown[]) => unknown>(func: T, limit: number): ((...args: Parameters<T>) => void) => {
@@ -115,21 +114,6 @@ const Contact = () => {
                     <h3 className="font-bold text-lg mb-2">Our Location</h3>
                   <div className="bg-surfaceAlt p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                     <p className="text-textSecondary">2 Marina Boulevard<br />San Francisco, CA 94123</p>
-                  </div>
-                </div>
-                
-                <div className="pt-4">
-                  <h3 className="font-bold text-lg mb-4">Follow Us</h3>
-                  <div className="flex space-x-4">
-                    <a href="https://linkedin.com/company/NoLimit" className="bg-accent/10 p-4 rounded-xl hover:bg-accent/20 transition-colors shadow-sm hover:shadow-md">
-                      <Linkedin className="text-accent" size={20} />
-                    </a>
-                    <a href="https://twitter.com/NoLimit" className="bg-accent/10 p-4 rounded-xl hover:bg-accent/20 transition-colors shadow-sm hover:shadow-md">
-                      <Twitter className="text-accent" size={20} />
-                    </a>
-                    <a href="https://instagram.com/NoLimit" className="bg-accent/10 p-4 rounded-xl hover:bg-accent/20 transition-colors shadow-sm hover:shadow-md">
-                      <Instagram className="text-accent" size={20} />
-                    </a>
                   </div>
                 </div>
               </div>
